@@ -1,0 +1,51 @@
+<!-- By Christina Rusu -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Timestamp Microservice Tester</title>
+  
+</head>
+<body>
+    <h1>Timestamp Microservice Tester</h1>
+
+    <div class="card">
+        <h3>Get Current Timestamp</h3>
+        <button onclick="fetchTimestamp('')">Get Current Time</button>
+    </div>
+
+    <h3>Result:</h3>
+    <div id="output" class="result-box">Click the button above to get timestamp</div>
+
+    <script>
+        async function fetchTimestamp(param) {
+            const endpoint = param ? `/timestamp/${encodeURIComponent(param)}` : '/timestamp';
+            const output = document.getElementById('output');
+            output.classList.remove('error');
+
+            try {
+                const response = await fetch(endpoint);
+                const data = await response.json();
+
+                if (!response.ok) {
+                    output.classList.add('error');
+                    output.textContent = data.error || 'Error fetching timestamp';
+                    return;
+                }
+
+                // Display the day, date and time fields
+                output.innerHTML = `
+                    <p><strong>Day:</strong> ${data.day}</p>
+                    <p><strong>Date:</strong> ${data.date}</p>
+                    <p><strong>Time:</strong> ${data.time}</p>
+                `;
+            } catch (err) {
+                output.classList.add('error');
+                output.textContent = 'Error connecting to service: ' + err.message;
+            }
+        }
+
+    </script>
+</body>
+</html>
